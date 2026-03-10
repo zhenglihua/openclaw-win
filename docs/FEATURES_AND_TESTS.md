@@ -114,7 +114,7 @@
 ### 3.2 项目结构
 
 ```
-OpenClawManager/
+OpenClaw-Win/
 ├── Views/
 │   ├── DashboardPage.xaml(.cs)    # 仪表盘页面
 │   ├── InstallPage.xaml(.cs)       # 安装向导页面
@@ -218,7 +218,7 @@ OpenClawManager/
 | 用例名称 | 验证配置保存功能 |
 | 前提条件 | 安装完成 |
 | 测试步骤 | 1. 输入API Key<br>2. 设置端口<br>3. 输入Token<br>4. 点击"完成" |
-| 预期结果 | 配置保存到 %APPDATA%\OpenClawManager\config.json |
+| 预期结果 | 配置保存到 %APPDATA%\OpenClawWin\config.json |
 | 测试结果 | ☐ 通过 ☐ 失败 |
 
 ### 4.3 状态监控测试用例

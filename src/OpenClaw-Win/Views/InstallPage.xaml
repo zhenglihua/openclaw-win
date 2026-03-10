@@ -1,0 +1,184 @@
+<Page x:Class="OpenClawWin.Views.InstallPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:OpenClawWin.Views"
+      mc:Ignorable="d"
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="安装">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <TextBlock Grid.Row="0"
+                   Text="安装向导"
+                   FontSize="28"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,24"/>
+
+        <!-- 步骤内容 -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <!-- 步骤1: 环境检测 -->
+                <ui:Card Visibility="{Binding IsStep1Visible}">
+                    <StackPanel>
+                        <TextBlock Text="环境检测" FontSize="20" FontWeight="SemiBold"/>
+                        <TextBlock Text="正在检测Node.js环境..." Margin="0,16,0,8"/>
+
+                        <ui:ProgressRing IsIndeterminate="{Binding IsChecking}"
+                                        Visibility="{Binding IsChecking, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                            <ui:SymbolIcon Symbol="CheckmarkCircle24"
+                                          Foreground="Green"
+                                          Visibility="{Binding IsNodeInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <TextBlock Text="Node.js 已安装"
+                                      Visibility="{Binding IsNodeInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      Margin="8,0,0,0"/>
+                            <ui:SymbolIcon Symbol="DismissCircle24"
+                                          Foreground="Red"
+                                          Visibility="{Binding IsNodeInstalled, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                            <TextBlock Text="Node.js 未安装"
+                                      Visibility="{Binding IsNodeInstalled, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                      Margin="8,0,0,0"/>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding NodeVersion}"
+                                  Visibility="{Binding IsNodeInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Foreground="Gray"
+                                  Margin="24,4,0,0"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <ui:SymbolIcon Symbol="CheckmarkCircle24"
+                                          Foreground="Green"
+                                          Visibility="{Binding IsOpenClawInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <TextBlock Text="OpenClaw 已安装"
+                                      Visibility="{Binding IsOpenClawInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      Margin="8,0,0,0"/>
+                            <ui:SymbolIcon Symbol="DismissCircle24"
+                                          Foreground="Red"
+                                          Visibility="{Binding IsOpenClawInstalled, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                            <TextBlock Text="OpenClaw 未安装"
+                                      Visibility="{Binding IsOpenClawInstalled, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                      Margin="8,0,0,0"/>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding OpenClawVersion}"
+                                  Visibility="{Binding IsOpenClawInstalled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                  Foreground="Gray"
+                                  Margin="24,4,0,0"/>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- 步骤2: 安装 -->
+                <ui:Card Visibility="{Binding IsStep2Visible}">
+                    <StackPanel>
+                        <TextBlock Text="安装OpenClaw" FontSize="20" FontWeight="SemiBold"/>
+
+                        <TextBlock Text="{Binding InstallProgress}" Margin="0,16,0,8"/>
+
+                        <ProgressBar Value="{Binding InstallPercentage}"
+                                       Maximum="100"
+                                       Margin="0,8,0,8"/>
+
+                        <TextBox Text="{Binding InstallLog, Mode=TwoWay}"
+                                IsReadOnly="True"
+                                TextWrapping="Wrap"
+                                AcceptsReturn="True"
+                                Height="150"
+                                VerticalScrollBarVisibility="Auto"
+                                FontFamily="Consolas"
+                                FontSize="11"/>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- 步骤3: 配置 -->
+                <ui:Card Visibility="{Binding IsStep3Visible}">
+                    <StackPanel>
+                        <TextBlock Text="配置" FontSize="20" FontWeight="SemiBold"/>
+
+                        <TextBlock Text="选择模型" Margin="0,16,0,8"/>
+                        <ComboBox SelectedItem="{Binding SelectedModel}" Width="300" HorizontalAlignment="Left">
+                            <ComboBoxItem Content="DeepSeek"/>
+                            <ComboBoxItem Content="GLM-4.7"/>
+                            <ComboBoxItem Content="Qwen"/>
+                            <ComboBoxItem Content="OpenAI"/>
+                        </ComboBox>
+
+                        <TextBlock Text="API Key" Margin="0,16,0,8"/>
+                        <ui:TextBox PlaceholderText="请输入API Key"
+                                   Text="{Binding ApiKey, Mode=TwoWay}"
+                                   Width="400"
+                                   HorizontalAlignment="Left"/>
+
+                        <TextBlock Text="端口" Margin="0,16,0,8"/>
+                        <ui:NumberBox PlaceholderText="端口"
+                                     Value="{Binding Port, Mode=TwoWay}"
+                                     Minimum="1024"
+                                     Maximum="65535"
+                                     Width="200"
+                                     HorizontalAlignment="Left"/>
+
+                        <TextBlock Text="Token (用于Web UI访问)" Margin="0,16,0,8"/>
+                        <ui:PasswordBox PlaceholderText="请输入Token"
+                                       Password="{Binding Token, Mode=TwoWay}"
+                                       Width="300"
+                                       HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- 步骤4: 完成 -->
+                <ui:Card Visibility="{Binding IsStep4Visible}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,40">
+                        <ui:SymbolIcon Symbol="CheckmarkCircle48"
+                                      FontSize="64"
+                                      Foreground="Green"
+                                      HorizontalAlignment="Center"/>
+                        <TextBlock Text="安装完成！"
+                                  FontSize="24"
+                                  FontWeight="SemiBold"
+                                  HorizontalAlignment="Center"
+                                  Margin="0,16,0,0"/>
+                        <TextBlock Text="现在您可以启动OpenClaw服务了"
+                                  Foreground="Gray"
+                                  HorizontalAlignment="Center"
+                                  Margin="0,8,0,0"/>
+                    </StackPanel>
+                </ui:Card>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 底部按钮 -->
+        <StackPanel Grid.Row="2"
+                   Orientation="Horizontal"
+                   HorizontalAlignment="Right"
+                   Margin="0,24,0,0">
+            <ui:Button Content="上一步"
+                      Click="PreviousStep_Click"
+                      Visibility="{Binding CanGoBack}"
+                      Margin="0,0,8,0"/>
+
+            <ui:Button Content="下一步"
+                      Appearance="Primary"
+                      Click="NextStep_Click"
+                      Visibility="{Binding CanGoNext}"/>
+
+            <ui:Button Content="开始安装"
+                      Appearance="Primary"
+                      Click="StartInstall_Click"
+                      Visibility="{Binding CanStartInstall}"/>
+
+            <ui:Button Content="完成"
+                      Appearance="Primary"
+                      Click="Finish_Click"
+                      Visibility="{Binding CanFinish}"/>
+        </StackPanel>
+    </Grid>
+</Page>

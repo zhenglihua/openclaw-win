@@ -64,3 +64,4 @@ bld/
 # OS
 .DS_Store
 Thumbs.db
+/thoughts/shared

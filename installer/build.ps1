@@ -23,7 +23,7 @@ if (Test-Path $PublishDir) {
 
 # 2. 发布项目
 Write-Host "[2/5] 发布项目..." -ForegroundColor Yellow
-$ProjectPath = Join-Path $ProjectRoot "src\OpenClawManager\OpenClawManager.csproj"
+$ProjectPath = Join-Path $ProjectRoot "src\OpenClaw-Win\OpenClaw-Win.csproj"
 dotnet publish $ProjectPath `
     -c $Configuration `
     -r win-x64 `
@@ -48,7 +48,7 @@ if (Test-Path $NssmSource) {
 }
 
 # 4. 复制配置文件
-$ConfigSource = Join-Path $ProjectRoot "src\OpenClawManager\appsettings.json"
+$ConfigSource = Join-Path $ProjectRoot "src\OpenClaw-Win\appsettings.json"
 $ConfigDest = Join-Path $PublishDir "appsettings.json"
 if (Test-Path $ConfigSource) {
     Copy-Item -Path $ConfigSource -Destination $ConfigDest -Force
@@ -57,7 +57,7 @@ if (Test-Path $ConfigSource) {
 
 # 5. 打包为zip
 Write-Host "[4/5] 打包..." -ForegroundColor Yellow
-$ZipName = "OpenClawManager-v1.0.0-win-x64"
+$ZipName = "OpenClaw-Win-v1.0.0-win-x64"
 $ZipPath = Join-Path $ProjectRoot "$ZipName.zip"
 if (Test-Path $ZipPath) {
     Remove-Item -Path $ZipPath -Force
