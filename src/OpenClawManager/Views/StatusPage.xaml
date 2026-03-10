@@ -1,0 +1,153 @@
+<Page x:Class="OpenClawManager.Views.StatusPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:OpenClawManager.Views"
+      mc:Ignorable="d"
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="状态">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <TextBlock Grid.Row="0"
+                   Text="服务状态"
+                   FontSize="28"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,24"/>
+
+        <!-- 状态面板 -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 实时状态 -->
+            <ui:Card Grid.Column="0" Margin="0,0,12,0">
+                <StackPanel>
+                    <TextBlock Text="实时状态"
+                              FontWeight="SemiBold"
+                              FontSize="16"
+                              Margin="0,0,0,16"/>
+
+                    <!-- 状态指示器 -->
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- 网关状态 -->
+                        <Ellipse Grid.Row="0" Grid.Column="0"
+                                Width="12" Height="12"
+                                Fill="{Binding GatewayStatusColor}"
+                                Margin="0,0,12,8"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                  Text="{Binding GatewayStatusText}"
+                                  Margin="0,0,0,8"/>
+
+                        <!-- 端口状态 -->
+                        <Ellipse Grid.Row="1" Grid.Column="0"
+                                Width="12" Height="12"
+                                Fill="{Binding PortStatusColor}"
+                                Margin="0,0,12,8"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1"
+                                  Text="{Binding PortStatusText}"
+                                  Margin="0,0,0,8"/>
+
+                        <!-- Windows服务状态 -->
+                        <Ellipse Grid.Row="2" Grid.Column="0"
+                                Width="12" Height="12"
+                                Fill="{Binding ServiceStatusColor}"
+                                Margin="0,0,12,0"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                  Text="{Binding ServiceStatusText}"/>
+                    </Grid>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- 控制面板 -->
+            <ui:Card Grid.Column="1" Margin="12,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="服务控制"
+                              FontWeight="SemiBold"
+                              FontSize="16"
+                              Margin="0,0,0,16"/>
+
+                    <WrapPanel>
+                        <ui:Button Content="启动"
+                                  Icon="{ui:SymbolIcon Play24}"
+                                  Appearance="Primary"
+                                  Command="{Binding StartCommand}"
+                                  Margin="0,0,8,8"/>
+
+                        <ui:Button Content="停止"
+                                  Icon="{ui:SymbolIcon Stop24}"
+                                  Command="{Binding StopCommand}"
+                                  Margin="0,0,8,8"/>
+
+                        <ui:Button Content="重启"
+                                  Icon="{ui:SymbolIcon ArrowSync24}"
+                                  Command="{Binding RestartCommand}"
+                                  Margin="0,0,8,8"/>
+                    </WrapPanel>
+
+                    <Separator Margin="0,16"/>
+
+                    <ui:Button Content="打开Web控制台"
+                              Icon="{ui:SymbolIcon WindowNew24}"
+                              Command="{Binding OpenWebConsoleCommand}"
+                              HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </ui:Card>
+        </Grid>
+
+        <!-- 日志查看 -->
+        <ui:Card Grid.Row="2" Margin="0,24,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                    <TextBlock Text="最近日志"
+                              FontWeight="SemiBold"
+                              FontSize="16"/>
+                    <ui:Button Content="刷新"
+                              Icon="{ui:SymbolIcon ArrowClockwise24}"
+                              Command="{Binding RefreshLogsCommand}"
+                              Margin="16,0,0,0"/>
+                    <ui:Button Content="清空"
+                              Icon="{ui:SymbolIcon Delete24}"
+                              Command="{Binding ClearLogsCommand}"
+                              Margin="8,0,0,0"/>
+                </StackPanel>
+
+                <ListView Grid.Row="1"
+                         ItemsSource="{Binding RecentLogs}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Message}"
+                                      FontFamily="Consolas"
+                                      FontSize="12"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </ui:Card>
+    </Grid>
+</Page>
